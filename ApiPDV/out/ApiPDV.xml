@@ -1,0 +1,357 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ApiPDV</name>
+    </assembly>
+    <members>
+        <member name="M:ApiPDV.Controllers.AuthController.Login(ApiPDV.DTOs.LoginModel)">
+            <summary>
+            Verifica as credenciais de um usuário
+            </summary>
+        </member>
+        <member name="M:ApiPDV.Controllers.AuthController.Register(ApiPDV.DTOs.RegisterModel)">
+            <summary>
+            Registra um novo usuário
+            </summary>
+        </member>
+        <member name="M:ApiPDV.Controllers.AuthController.RefreshToken(ApiPDV.DTOs.TokenModel)">
+            <summary>
+            Gera um novo token de acesso
+            </summary>
+        </member>
+        <member name="M:ApiPDV.Controllers.AuthController.Revoke(System.String)">
+            <summary>
+            Revoga um refresh token
+            </summary>
+            /// <remarks>
+            Acesso restrito ao perfil: <b>Admin</b>.
+            </remarks>
+        </member>
+        <member name="M:ApiPDV.Controllers.AuthController.CreateRole(System.String)">
+            <summary>
+            Cria um novo cargo
+            </summary>
+            /// <remarks>
+            Acesso restrito ao perfil: <b>Admin</b>.
+            </remarks>
+        </member>
+        <member name="M:ApiPDV.Controllers.AuthController.AddUserToRole(System.String,System.String)">
+            <summary>
+            Adiciona um usuario a um cargo
+            </summary>
+            /// <remarks>
+            Acesso restrito ao perfil: <b>Admin</b>.
+            </remarks>
+        </member>
+        <member name="M:ApiPDV.Controllers.AuthController.Logout">
+            <summary>
+            Realiza o logout
+            </summary>
+        </member>
+        <member name="M:ApiPDV.Controllers.CarrinhoController.GetAllAsync">
+            <summary>
+            Retorna todos os carrinhos
+            </summary>
+            <remarks>
+            Acesso restrito ao perfil: <b>Admin ou Gerente</b>.
+            </remarks>
+        </member>
+        <member name="M:ApiPDV.Controllers.CarrinhoController.Get(System.Int32)">
+            <summary>
+            Retorna um carringo por id
+            </summary>
+            <remarks>
+            Acesso restrito ao perfil: <b>Admin ou Gerente</b>.
+            </remarks>
+        </member>
+        <member name="M:ApiPDV.Controllers.CarrinhoController.Create">
+            <summary>
+            Cria um novo carrinho vazio e salva no cache
+            </summary>
+            <remarks>
+            Acesso somente ao logar.
+            </remarks>
+        </member>
+        <member name="M:ApiPDV.Controllers.CarrinhoController.AdicionarAoCarrinho(System.Int32)">
+            <summary>
+            Adiciona um produto ao carrinho salvo no cache
+            </summary>
+            <remarks>
+            <param name="code">Id ou codigo de barras</param> 
+            Acesso somente ao logar.
+            </remarks>
+        </member>
+        <member name="M:ApiPDV.Controllers.CarrinhoController.AlterarQuantidade(System.Int32,System.Int32)">
+            <summary>
+            altera a quantidade de um produto do carrinho no cache
+            </summary>
+            <param name="id">id do produtocarrinho</param>
+            <param name="quantidade">Nova quantidade</param>
+            <remarks>
+            Acesso somente ao logar.
+            </remarks>
+        </member>
+        <member name="M:ApiPDV.Controllers.CarrinhoController.Delete(System.Int32)">
+            <summary>
+            Deleta um carrinho
+            </summary>
+            <param name="id">id do carrinho</param>
+            <remarks>
+            Acesso restrito ao perfil: <b>Admin</b>.
+            </remarks>
+        </member>
+        <member name="M:ApiPDV.Controllers.ProdutoController.GetAllAsync">
+            <summary>
+            Retorna todos os produtos disponíveis.
+            </summary>
+        </member>
+        <member name="M:ApiPDV.Controllers.ProdutoController.GetAllAsync(ApiPDV.Pagination.ProdutosParameters)">
+            <summary>
+            Retorna todos os produtos com paginação
+            </summary>
+        </member>
+        <member name="M:ApiPDV.Controllers.ProdutoController.GetAllAsync(ApiPDV.Pagination.ProdutosFiltroPreco)">
+            <summary>
+            Retorna todos os produtos com paginação filtrando por preço
+            </summary>
+        </member>
+        <member name="M:ApiPDV.Controllers.ProdutoController.GetAllAsync(ApiPDV.Pagination.ProdutosFiltroNome)">
+            <summary>
+            Retorna todos os produtos com paginação filtrando por nome
+            </summary>
+        </member>
+        <member name="M:ApiPDV.Controllers.ProdutoController.GetByIdAsync(System.Int32)">
+            <summary>
+            Obtem o produto pelo seu identificador id
+            </summary>
+        </member>
+        <member name="M:ApiPDV.Controllers.ProdutoController.Create(ApiPDV.DTOs.Request.ProdutoRequestDTO)">
+            <summary>
+            Cria um novo produto
+            </summary>
+            <remarks>
+            Acesso restrito ao perfil: <b>Admin ou Gerente</b>.
+            </remarks>
+        </member>
+        <member name="M:ApiPDV.Controllers.ProdutoController.Put(ApiPDV.DTOs.Request.ProdutoRequestDTO,System.Int32)">
+            <summary>
+            Atualiza um produto
+            </summary>
+            <remarks>
+            Acesso restrito ao perfil: <b>Admin ou Gerente</b>.
+            </remarks>
+        </member>
+        <member name="M:ApiPDV.Controllers.ProdutoController.AddEstoque(System.Int32,System.Int32)">
+            <summary>
+            Adiciona estoque a um produto
+            </summary>
+            <remarks>
+            Acesso restrito ao perfil: <b>Admin ou Gerente</b>.
+            </remarks>
+        </member>
+        <member name="M:ApiPDV.Controllers.ProdutoController.Delete(System.Int32)">
+            <summary>
+            Deleta um produto
+            </summary>
+            <remarks>
+            Acesso restrito ao perfil: <b>Admin</b>.
+            </remarks>
+        </member>
+        <member name="M:ApiPDV.Controllers.VendasController.GetAllVendas">
+            <summary>
+            Retorna todas as vendas
+            </summary>
+            <remarks>
+            Acesso somente ao logar
+            </remarks>
+        </member>
+        <member name="M:ApiPDV.Controllers.VendasController.GetVenda(System.Int32)">
+            <summary>
+            Retorna uma venda pelo id
+            </summary>
+            <remarks>
+            Acesso somente ao logar.
+            </remarks>
+        </member>
+        <member name="M:ApiPDV.Controllers.VendasController.GetAllPaged(ApiPDV.Pagination.VendasParameters)">
+            <summary>
+            Retorna todas as vendas com paginação
+            </summary>
+            <remarks>
+            Acesso somente ao logar.
+            </remarks>
+        </member>
+        <member name="M:ApiPDV.Controllers.VendasController.GetAllPaged(ApiPDV.Pagination.VendasFiltroData)">
+            <summary>
+            Retorna todas as vendas com paginação e filtro por data
+            </summary>
+            <remarks>
+            Acesso somente ao logar.
+            </remarks>
+        </member>
+        <member name="M:ApiPDV.Controllers.VendasController.GetAllPagedMonth(ApiPDV.Pagination.VendaFiltroMes)">
+            <summary>
+            Retorna todas as vendas com paginação e filtro por mês
+            </summary>
+            <remarks>
+            Acesso somente ao logar.
+            </remarks>
+        </member>
+        <member name="M:ApiPDV.Controllers.VendasController.GetAllPagedPayment(ApiPDV.Pagination.VendaFiltroPagamento)">
+            <summary>
+            Retorna todas as vendas com paginação e filtro por tipo de pagamento
+            </summary>
+            <remarks>
+            Acesso somente ao logar.
+            </remarks>
+        </member>
+        <member name="M:ApiPDV.Controllers.VendasController.GetAllPageddays(ApiPDV.Pagination.VendasFiltroDias)">
+            <summary>
+            Retorna todas as vendas com paginação e filtro nos ultimos X dias
+            </summary>
+            <remarks>
+            Acesso somente ao logar.
+            </remarks>
+        </member>
+        <member name="M:ApiPDV.Controllers.VendasController.RealizarVenda(System.String)">
+            <summary>
+            Realiza a venda do carrinho salvo no cache
+            </summary>
+            <param name="nomeMetodoPagamento">Dinheiro, debito, credito ou pix</param>
+            <remarks>
+            Acesso somente ao logar.
+            </remarks>
+        </member>
+        <member name="P:ApiPDV.DTOs.Response.ProdutoResponseDTO.Id">
+            <summary>
+            Id do produto
+            </summary>
+        </member>
+        <member name="T:ApiPDV.Migrations.inicial">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.inicial.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.inicial.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.inicial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ApiPDV.Migrations.DTOs">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.DTOs.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.DTOs.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.DTOs.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ApiPDV.Migrations.cascade">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.cascade.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.cascade.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.cascade.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ApiPDV.Migrations.teste">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.teste.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.teste.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.teste.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ApiPDV.Migrations.teste1">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.teste1.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.teste1.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.teste1.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ApiPDV.Migrations.teste2">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.teste2.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.teste2.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.teste2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ApiPDV.Migrations.teste3">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.teste3.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.teste3.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.teste3.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ApiPDV.Migrations.supabase">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.supabase.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.supabase.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ApiPDV.Migrations.supabase.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="P:ApiPDV.Pagination.ProdutosFiltroPreco.PrecoCriterio">
+            <summary>
+            Maior, menor, ou igual ao preço
+            </summary>
+        </member>
+        <member name="P:ApiPDV.Pagination.QueryStringParameters.PageNumber">
+            <summary>
+            Número atual da página
+            </summary>
+        </member>
+        <member name="P:ApiPDV.Pagination.QueryStringParameters.PageSize">
+            <summary>
+            Quantidade de itens por página
+            </summary>
+        </member>
+        <member name="P:ApiPDV.Pagination.VendaFiltroPagamento.Pagamento">
+            <summary>
+            Dinheiro, debito, credito ou pix
+            </summary>
+        </member>
+        <member name="P:ApiPDV.Pagination.VendasFiltroData.DataInicial">
+            <summary>
+            Data inicial
+            </summary>
+        </member>
+        <member name="P:ApiPDV.Pagination.VendasFiltroData.DataFinal">
+            <summary>
+            Data final
+            </summary>
+        </member>
+    </members>
+</doc>
