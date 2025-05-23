@@ -17,7 +17,7 @@ namespace ApiPDV.Repositories
         public async Task<IEnumerable<T>> GetAllAsync()
         {
            
-            return await _context.Set<T>().ToListAsync();
+            return await _context.Set<T>().AsNoTracking().ToListAsync();
         }
 
         public async Task<T> GetAsync(Expression<Func<T, bool>> predicate)
@@ -48,7 +48,7 @@ namespace ApiPDV.Repositories
             return entity;
         }
 
-        public async Task<PagedList<T>> GetPagedAsync(Expression<Func<T, bool>>? predicate, Expression<Func<T, string>>? orderPredicate,  int pageNumber, int pageSize)
+        public async Task<PagedList<T>> GetPagedAsync<TKey>(Expression<Func<T, bool>>? predicate, Expression<Func<T, TKey>>? orderPredicate,  int pageNumber, int pageSize)
         {
             var query = _context.Set<T>().AsQueryable();
 

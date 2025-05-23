@@ -1,43 +1,60 @@
-﻿using ApiPDV.Models;
+﻿using ApiPDV.DTOs.Mapping;
+using ApiPDV.DTOs.Request;
+using ApiPDV.DTOs.Response;
+using ApiPDV.Models;
 using ApiPDV.Pagination;
 using ApiPDV.Repositories;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace ApiPDV.Controllers
 {
-
+    
     [Route("[controller]")]
     [ApiController]
     public class ProdutoController : Controller
     {
-
+        private readonly IMapper _mapper;
         private readonly IUnitOfWork _uof;
 
-        public ProdutoController(IUnitOfWork uof)
+        public ProdutoController(IUnitOfWork uof, IMapper mapper)
         {
             _uof = uof;
+            _mapper = mapper;
+
         }
 
+        /// <summary>
+        /// Retorna todos os produtos disponíveis.
+        /// </summary>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Produto>>> GetAllAsync()
+        public async Task<ActionResult<IEnumerable<ProdutoResponseDTO>>> GetAllAsync()
         {
-            var produtos = await _uof.ProdutoRepository.GetAllAsync();  
-            return Ok(produtos);
+            var produtos = await _uof.ProdutoRepository.GetAllAsync();
+            var produtosDto = _mapper.Map<IEnumerable<ProdutoResponseDTO>>(produtos);
+            return Ok(produtosDto);
         }
 
+        /// <summary>
+        /// Retorna todos os produtos com paginação
+        /// </summary>
         [HttpGet("pagination")]
-        public async Task<ActionResult<IEnumerable<Produto>>> GetAllAsync([FromQuery] ProdutosParameters produtosParameters)
+        public async Task<ActionResult<IEnumerable<ProdutoResponseDTO>>> GetAllAsync([FromQuery] ProdutosParameters produtosParameters)
         {
             var produtos = await _uof.ProdutoRepository.GetPagedAsync(null,p => p.Nome, produtosParameters.PageNumber, produtosParameters.PageSize);
-
+            
             return ObterProdutos(produtos);
 
 
         }
 
+        /// <summary>
+        /// Retorna todos os produtos com paginação filtrando por preço
+        /// </summary>
         [HttpGet("filter/pagination/preco")]
-        public async Task<ActionResult<IEnumerable<Produto>>> GetAllAsync([FromQuery] ProdutosFiltroPreco produtosParameters)
+        public async Task<ActionResult<IEnumerable<ProdutoResponseDTO>>> GetAllAsync([FromQuery] ProdutosFiltroPreco produtosParameters)
         {
             var produtos = await _uof.ProdutoRepository.GetAllPagFiltroPrecoAsync(produtosParameters);
 
@@ -45,52 +62,107 @@ namespace ApiPDV.Controllers
 
         }
 
+        /// <summary>
+        /// Retorna todos os produtos com paginação filtrando por nome
+        /// </summary>
         [HttpGet("filter/pagination/nome")]
-        public async Task<ActionResult<IEnumerable<Produto>>> GetAllAsync([FromQuery] ProdutosFiltroNome produtosParameters)
+        public async Task<ActionResult<IEnumerable<ProdutoResponseDTO>>> GetAllAsync([FromQuery] ProdutosFiltroNome produtosParameters)
         {
             var produtos = await _uof.ProdutoRepository.GetPagedAsync(p => p.Nome.Contains(produtosParameters.Nome), p => p.Nome, produtosParameters.PageNumber, produtosParameters.PageSize);
 
             return ObterProdutos(produtos);
         }
 
+        /// <summary>
+        /// Obtem o produto pelo seu identificador id
+        /// </summary>
+        
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<Produto>> GetByIdAsync(int id)
+        public async Task<ActionResult<ProdutoResponseDTO>> GetByIdAsync(int id)
         {
           
             var produto = await _uof.ProdutoRepository.GetAsync(p => p.Id == id);
+    
             if(produto == null)
             {
                 return NotFound("Produto não encontrado");
             }
-            return Ok(produto);
+            var produtoDto = _mapper.Map<ProdutoResponseDTO>(produto);
+            return Ok(produtoDto);
 
 
         }
 
+        /// <summary>
+        /// Cria um novo produto
+        /// </summary>
+        /// <remarks>
+        /// Acesso restrito ao perfil: <b>Admin ou Gerente</b>.
+        /// </remarks>
         [HttpPost]
-        public async Task<ActionResult<Produto>> Create(Produto produto)
+        [Authorize(Policy = "Management")]
+        public async Task<ActionResult<ProdutoResponseDTO>> Create(ProdutoRequestDTO produtoDto)
         {
-            if (produto is null)
+            if (produtoDto is null)
                 return BadRequest();
-
+            var produto = _mapper.Map<Produto>(produtoDto);
+            produto.DataCadastro = DateTime.Now;
             var novoProduto = _uof.ProdutoRepository.Create(produto);
             await _uof.CommitAsync();
-            return Ok(novoProduto);
+            var novoProdutoDto = _mapper.Map<ProdutoResponseDTO>(produto);
+            return Ok(novoProdutoDto);
         }
 
+        /// <summary>
+        /// Atualiza um produto
+        /// </summary>
+        /// <remarks>
+        /// Acesso restrito ao perfil: <b>Admin ou Gerente</b>.
+        /// </remarks>
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<Produto>> Put(Produto produto, int id)
+        [Authorize(Policy = "Management")]
+        public async Task<ActionResult<ProdutoResponseDTO>> Put(ProdutoRequestDTO produtoDto, int id)
         {
-            if(produto.Id != id)
-                return BadRequest();
 
+            var produto = _mapper.Map<Produto>(produtoDto);
             var produtoAtualizado = _uof.ProdutoRepository.Update(produto);
             await _uof.CommitAsync();
-            return Ok(produtoAtualizado);
+            var produtoAtualizadoDto = _mapper.Map<ProdutoResponseDTO>(produtoAtualizado);
+            return Ok(produtoAtualizadoDto);
 
         }
 
+        /// <summary>
+        /// Adiciona estoque a um produto
+        /// </summary>
+        /// <remarks>
+        /// Acesso restrito ao perfil: <b>Admin ou Gerente</b>.
+        /// </remarks>
+        [HttpPut("addestoque")]
+        [Authorize(Policy = "Management")]
+        public async Task<ActionResult<ProdutoResponseDTO>> AddEstoque(int id, [FromBody]int quantidade)
+        {
+            var produto = await _uof.ProdutoRepository.GetAsync(p => p.Id == id);
+            if (quantidade <= 0)
+            {
+                return BadRequest("Insira um valor maior que zero");
+            }
+            produto.Estoque += quantidade;
+            var produtoAtualizado = _uof.ProdutoRepository.Update(produto);
+            await _uof.CommitAsync();
+            var produtoDto = _mapper.Map<ProdutoResponseDTO>(produtoAtualizado);
+            return Ok (produtoDto);
+        }
+
+        /// <summary>
+        /// Deleta um produto
+        /// </summary>
+        /// <remarks>
+        /// Acesso restrito ao perfil: <b>Admin</b>.
+        /// </remarks>
         [HttpDelete]
+        [Authorize(Policy = "AdminOnly")]
+        
         public async Task<ActionResult<Produto>> Delete(int id)
         {
             var produto = await _uof.ProdutoRepository.GetAsync(p => p.Id == id);
@@ -99,11 +171,12 @@ namespace ApiPDV.Controllers
 
             var produtoDeletado = _uof.ProdutoRepository.Delete(produto);
             await _uof.CommitAsync();
-            return Ok(produtoDeletado);
+            var produtoDeletadoDto = _mapper.Map<ProdutoResponseDTO>(produtoDeletado);
+            return Ok(produtoDeletadoDto);
 
         }
 
-        private ActionResult<IEnumerable<Produto>> ObterProdutos(PagedList<Produto> produtos) {
+        private ActionResult<IEnumerable<ProdutoResponseDTO>> ObterProdutos(PagedList<Produto> produtos) {
             var metadata = new
             {
                 produtos.TotalCount,
@@ -115,8 +188,8 @@ namespace ApiPDV.Controllers
             };
 
             Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
-
-            return Ok(produtos);
+            var produtosDto = _mapper.Map<IEnumerable<ProdutoResponseDTO>>(produtos);
+            return Ok(produtosDto);
 
         }
 

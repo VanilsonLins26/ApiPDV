@@ -1,5 +1,6 @@
 ﻿using ApiPDV.Models;
 using ApiPDV.Pagination;
+using System.Linq.Expressions;
 
 namespace ApiPDV.Repositories
 {
@@ -7,5 +8,6 @@ namespace ApiPDV.Repositories
     {
         
         Task<PagedList<Produto>> GetAllPagFiltroPrecoAsync(ProdutosFiltroPreco produtosFiltroPreco);
+        Task<Produto> GetNoTrackingAsync(Expression<Func<Produto, bool>> predicate);
     }
 }

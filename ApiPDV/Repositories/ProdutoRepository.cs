@@ -1,6 +1,7 @@
 ﻿using ApiPDV.Context;
 using ApiPDV.Models;
 using ApiPDV.Pagination;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace ApiPDV.Repositories
@@ -10,7 +11,11 @@ namespace ApiPDV.Repositories
 
         public ProdutoRepository(AppDbContext context) : base(context) { }
 
-        
+        public async Task<Produto> GetNoTrackingAsync(Expression<Func<Produto, bool>> predicate)
+        {
+            var produto = await _context.Produtos.Where(predicate).AsNoTracking().FirstOrDefaultAsync();
+            return produto;
+        }
 
         public async Task<PagedList<Produto>> GetAllPagFiltroPrecoAsync(ProdutosFiltroPreco produtosFiltroPreco)
         {

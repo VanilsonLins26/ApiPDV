@@ -4,6 +4,6 @@
     {
         Aberto = 0,
         Fechado = 1,
-        Cancelado
+        Cancelado = 2
     }
 }
