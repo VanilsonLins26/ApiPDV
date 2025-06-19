@@ -81,21 +81,34 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
-    options.AddPolicy("FuncionarioOnly", policy => policy.RequireRole("Funcionario"));
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("admin"));
+    options.AddPolicy("FuncionarioOnly", policy => policy.RequireRole("funcionario"));
     options.AddPolicy("GerenteOnly", policy => policy.RequireRole("Gerente"));
     options.AddPolicy("All", policy => policy.RequireAssertion(context =>
-                      context.User.IsInRole("Admin") || context.User.IsInRole("Funcionario") ||
+                      context.User.IsInRole("admin") || context.User.IsInRole("auncionario") ||
                       context.User.IsInRole("Gerente")));
     options.AddPolicy("Management", policy => policy.RequireAssertion(context =>
-                      context.User.IsInRole("Admin") ||
+                      context.User.IsInRole("admin") ||
                       context.User.IsInRole("Gerente")));
 });
 
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy => policy
+            .WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
 
+var mySqlConnection = builder.Configuration.GetConnectionString("AppContext");
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("AppContext")));
+                                            options.UseMySql(mySqlConnection, ServerVersion
+                                            .AutoDetect(mySqlConnection)));
+
+//builder.Services.AddDbContext<AppDbContext>(options =>
+//    options.UseNpgsql(builder.Configuration.GetConnectionString("AppContext")));
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -105,14 +118,14 @@ builder.Services.AddScoped<IProdutoCarrinhoRepository, ProdutoCarrinhoRepository
 builder.Services.AddScoped<IVendaRepository, VendaRepository>();
 builder.Services.AddScoped<IMetodoPagamentoRepository,MetodoPagamentoRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ICarrinhoService,CarrinhoService>();
+builder.Services.AddScoped<IProdutoService, ProdutoService>();
+builder.Services.AddScoped<IVendasService, VendasService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddMemoryCache();
 
 builder.Services.AddAutoMapper(typeof(DTOMapping));
 
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    serverOptions.ListenAnyIP(80); // Necessário para Docker expor corretamente a porta 80
-});
 
 var app = builder.Build();
 
@@ -120,13 +133,15 @@ var app = builder.Build();
 
 
 // Configure the HTTP request pipeline.
-
-
+if (app.Environment.IsDevelopment())
+{
     app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "PDV API v1"));
+}
 
-
+app.UseCors("AllowFrontend");
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
