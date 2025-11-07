@@ -8,7 +8,7 @@
 
 Esta é uma **API REST robusta** desenvolvida em .NET Core para gerenciar um sistema completo de Ponto de Vendas (PDV) focado em uma padaria.
 
-O projeto foi estruturado utilizando uma **arquitetura focada em serviços** (Service-Oriented Architecture) para garantir um código limpo, desacoplado, manutenível e escalável, separando as regras de negócio da camada de acesso a dados.
+O projeto foi estruturado utilizando uma **Arquitetura Multicamadas)**, separando claramente as responsabilidades entre os *Controllers* (Camada de Apresentação/API), a *Lógica de Negócios* (Camada de Serviços/Negócio) e o *Acesso a Dados* (Camada de Dados com Entity Framework). Isso garante um código limpo, desacoplado, manutenível e escalável.
 
 ## ✨ Principais Funcionalidades
 
