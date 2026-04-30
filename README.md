@@ -54,7 +54,7 @@ A API cobre todas as necessidades de um sistema de vendas moderno:
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/SEU-USUARIO/ApiPDV.git](https://github.com/SEU-USUARIO/ApiPDV.git)
+    git clone (https://github.com/VanilsonLins26/ApiPDV)
     cd ApiPDV
     ```
 
